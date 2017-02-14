@@ -16,28 +16,13 @@
 
 package com.google.cloud.pubsub.spi.v1;
 
-import com.google.common.util.concurrent.SettableFuture;
 import com.google.pubsub.v1.PubsubMessage;
 
 /** This interface can be implemented by users of {@link Subscriber} to receive messages. */
 public interface MessageReceiver {
-  /** A reply to a message, to be sent back to the service. */
-  enum AckReply {
-    /**
-     * Acknowledges that the message has been successfully processed. The service will not send the
-     * message again.
-     */
-    ACK,
-    /**
-     * Signals that the message has not been successfully processed. The service will resend the
-     * message.
-     */
-    NACK
-  }
-
   /**
-   * Called when a message is received by the subscriber. The implementation must arrange for {@code
-   * reponse} to be set after processing the {@code message}.
+   * Called when a message is received by the subscriber. The implementation must arrange for {@link
+   * AckReplyConsumer#accept} to be called after processing the {@code message}.
    */
-  void receiveMessage(final PubsubMessage message, final SettableFuture<AckReply> response);
+  void receiveMessage(final PubsubMessage message, final AckReplyConsumer consumer);
 }
